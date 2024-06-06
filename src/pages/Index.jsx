@@ -1,19 +1,32 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
-
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+import { useState } from "react";
+import { Container, VStack, Box } from "@chakra-ui/react";
+import NavBar from "../components/NavBar";
+import NoteForm from "../components/NoteForm";
+import Note from "../components/Note";
 
 const Index = () => {
+  const [notes, setNotes] = useState([]);
+
+  const addNote = (note) => {
+    setNotes([...notes, { ...note, id: Date.now() }]);
+  };
+
+  const deleteNote = (id) => {
+    setNotes(notes.filter((note) => note.id !== id));
+  };
+
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
-      </VStack>
-    </Container>
+    <Box bg="gray.100" minH="100vh">
+      <NavBar />
+      <Container maxW="container.md" py={4}>
+        <NoteForm onAdd={addNote} />
+        <VStack spacing={4}>
+          {notes.map((note) => (
+            <Note key={note.id} note={note} onDelete={deleteNote} />
+          ))}
+        </VStack>
+      </Container>
+    </Box>
   );
 };
 
